@@ -4,13 +4,33 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("E-Mail:", email);
-    console.log("Passwort:", password);
-    console.log('Remember me:', rememberMe);
   };
+
+  try {
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, rememberMe }),
+      });
+
+      if (response.status === 400 || response.status === 401) {
+        setMessage("Bitte kontrolliere deine Daten.");
+      } else if (response.status === 403) {
+        setMessage("Bitte bestätige deine E-Mail.");
+      } else if (response.ok) {
+        setMessage("Login erfolgreich!");
+      } else {
+        setMessage("Anmeldung fehlgeschlagen. Bitte versuche es erneut.");
+      }
+    } catch (error) {
+      setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
+    };
 
   return (
     <div className="login-container">
@@ -27,7 +47,7 @@ function Login() {
           />
         </div>
 
-                <div className="forgot-password">
+        <div className="forgot-password">
           <a href="/forgot-password">Forgot your password?</a>
         </div>
 
@@ -56,6 +76,7 @@ function Login() {
           Anmelden
         </button>
       </form>
+      {message && <p>{message}</p>}
     </div>
   );
 }
