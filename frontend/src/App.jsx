@@ -11,7 +11,7 @@ function App() {
     <div className="container">
      
       <Routes>
-          <Route path="/" element={<Home />} />
+          {/* <Route path="/" element={<Home />} /> */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Routes>
@@ -20,4 +20,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
