@@ -8,29 +8,43 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  };
 
-  try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, rememberMe }),
-      });
+    fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password, rememberMe })
+        .then((response) => {
+          if (response.status === 200) {
+            setMessage("Login erfolgreich!");
+          } else if (response.status === 400 || response.status === 401) {
+            setMessage("Bitte kontrolliere deine Daten");
+          } else if (response.status === 403) {
+            setMessage("Bitte bestätige deine E-Mail");
+          } else {
+            setMessage("Es gab einen Fehler. Bitte versuche es erneut.");
+          }
+        })
+        .catch((error) => {
+          setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
+        })
+    })
+  }
+    //   });
 
-      if (response.status === 400 || response.status === 401) {
-        setMessage("Bitte kontrolliere deine Daten.");
-      } else if (response.status === 403) {
-        setMessage("Bitte bestätige deine E-Mail.");
-      } else if (response.ok) {
-        setMessage("Login erfolgreich!");
-      } else {
-        setMessage("Anmeldung fehlgeschlagen. Bitte versuche es erneut.");
-      }
-    } catch (error) {
-      setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
-    };
+    //   if (response.status === 400 || response.status === 401) {
+    //     setMessage("Bitte kontrolliere deine Daten.");
+    //   } else if (response.status === 403) {
+    //     setMessage("Bitte bestätige deine E-Mail.");
+    //   } else if (response.ok) {
+    //     setMessage("Login erfolgreich!");
+    //   } else {
+    //     setMessage("Anmeldung fehlgeschlagen. Bitte versuche es erneut.");
+    //   }
+    // } catch (error) {
+    //   setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
+    // };
 
   return (
     <div className="login-container">
