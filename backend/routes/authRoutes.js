@@ -31,8 +31,9 @@ router.post("/register", async (req, res) => {
         });
 
         // Отправка подтверждающего письма на вашу почту
-        try {
-            const emailResponse = await resend.emails.send({
+
+        const emailResponse = await resend.emails
+            .send({
                 from: 'onboarding@resend.dev',
                 to: emailAddress,
                 subject: 'Willkommen! Bitte E-Mail bestätigen',
@@ -54,11 +55,13 @@ router.post("/register", async (req, res) => {
     `
             });
 
-            if (!emailResponse || emailResponse.status !== 'success') {
-                return res.status(500).json({ error: 'Failed to send verification email' });
-            }
-        } catch (emailError) {
-            return res.status(500).json({ error: 'Failed to send verification email', details: emailError.message });
+        if (emailResponse.error) {
+            return res
+                .status(500)
+                .json({
+                    error: "Failed to send verification email",
+                    details: emailError.message,
+                });
         }
 
         res.status(201).json(user);
@@ -67,9 +70,34 @@ router.post("/register", async (req, res) => {
     }
 })
 
+router.get("/verify/:token", async (req, res) => {
+    const token = req.params.token;
+    try {
+        const user = await User.findOne({ verificationToken: token });
+
+        if (user && Date.now() < user.tokenExpiresAt) {
+
+            // Подтверждаем учетную запись
+            user.verified = true;
+            user.verificationToken = undefined;
+            user.tokenExpiresAt = undefined;
+
+            await user.save();
+
+            res.status(200).json({ message: "Account successfully verified" });
+        } else {
+            return res.status(400).json({ "error": "Invalid or expired token " })
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
 router.post("/login", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+
+    // console.log(req.body)
 
     if (!email || !password) {
         return res.status(400).json({ error: 'Invalid login' });
@@ -77,6 +105,7 @@ router.post("/login", async (req, res) => {
 
     try {
         const user = await User.findOne({ email: email });
+        // console.log(user)
         if (!user) {
             return res.status(401).json({ error: 'Invalid login' });
         }
@@ -87,6 +116,8 @@ router.post("/login", async (req, res) => {
 
         const passwordCorrect = await bcrypt.compare(password, user.password);
 
+        console.log(passwordCorrect)
+
         if (!passwordCorrect) {
             return res.status(401).json({ error: 'Invalid login' });
         }
@@ -95,6 +126,7 @@ router.post("/login", async (req, res) => {
             status: "success",
             user: user
         });
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

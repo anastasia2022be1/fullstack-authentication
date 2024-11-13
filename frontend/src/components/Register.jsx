@@ -8,12 +8,12 @@ export default function Register() {
     function onSubmit(e) {
         e.preventDefault();
 
-        fetch('http://localhost:3000/register', {
-            method: 'POST', // HTTP-Methode
+        fetch('http://localhost:3000/api/register', {
+            method: 'POST',
             headers: {
-              'Content-Type': 'application/json' // Header, der den Inhaltstyp angibt
+              'Content-Type': 'application/json' 
             },
-            body: JSON.stringify({ // Daten, die im Anfrage-Body gesendet werden
+            body: JSON.stringify({ 
               email: email,
               password: password
             })
