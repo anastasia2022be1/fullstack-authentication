@@ -1,17 +1,19 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar.jsx"
 
-export default function Layout() {
+function Layout() {
   return (
-    <>
+    <div>
       <header>
-        <Navbar />
+        {/* Hier kann ein Navbar oder ein Header eingefügt werden */}
       </header>
       <main>
-        <Outlet />
+        <Outlet /> {/* Rendern der untergeordneten Routen */}
       </main>
-
-      <footer> by Anastasia</footer>
-    </>
+      <footer>
+        {/* Hier kann ein Footer eingefügt werden */}
+      </footer>
+    </div>
   );
 }
+
+export default Layout;

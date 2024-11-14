@@ -1,3 +1,19 @@
+/* Home.jsx */
+.home-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.login-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+}
+
+.home-container p {
+  margin-top: 10px;
+}
+
 /* Container for the entire page */
 .container {
   display: flex;

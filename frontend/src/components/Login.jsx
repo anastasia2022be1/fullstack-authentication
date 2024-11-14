@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setLoading(true);
 
     fetch("http://localhost:3000/api/login", {
       method: "POST",
@@ -15,9 +19,11 @@ function Login() {
       },
       body: JSON.stringify({ email: email, password: password })
     })
-        .then((response) => {
+      .then((response) => {
+          setLoading(false);
           if (response.status === 200) {
             setMessage("Login erfolgreich!");
+            return response.json();
           } else if (response.status === 400 || response.status === 401) {
             setMessage("Bitte kontrolliere deine Daten");
           } else if (response.status === 403) {
@@ -25,10 +31,17 @@ function Login() {
           } else {
             setMessage("Es gab einen Fehler. Bitte versuche es erneut.");
           }
-        })
-        .catch((error) => {
-          setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
-        })
+      })
+      .then((data) => {
+        if (data && data.token) {
+          localStorage.setItem("token", data.token); // Token speichern
+          navigate("/home"); // Nach erfolgreichem Login umleiten
+        }
+      })
+     .catch((error) => {
+        setLoading(false);
+        setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
+      });
     }
   
 

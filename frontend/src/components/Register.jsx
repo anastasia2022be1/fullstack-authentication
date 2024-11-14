@@ -23,26 +23,41 @@ export default function Register() {
                 throw new Error("registration failed");
             }
             setMessage("Bitte checke deine Inbox und bestätige dein E-Mail.");
+            setEmail("");  
+            setPassword("");
         })
-        .catch((error) => setMessage("Bitte kontrolliere deine Daten"));
+        .catch((error) => setMessage("Registrierung fehlgeschlagen. Bitte kontrolliere deine Daten."));
 
     }
 
     return (
-        <section>
-            <h1>Neu hier?</h1>
-            <p>{message}</p>
+        <div className="login-container">
+            <h2>Registration</h2>
+            {message && <p>{message}</p>}
             <form onSubmit={onSubmit}>
-                <div>
+                <div className="form-group">
                     <label htmlFor="email">E-Mail-Adresse</label>
-                    <input type="text" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        required 
+                    />
                 </div>
-                <div>
+                <div className="form-group">
+                
                     <label htmlFor="password">Passwort</label>
-                    <input type="text" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required 
+                    />
                 </div>
-                <button>Registrieren</button>
+                <button type="submit" className="login-button">Registrieren</button>
             </form>
-        </section>
+        </div>
     )
 }

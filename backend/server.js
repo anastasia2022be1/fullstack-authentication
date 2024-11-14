@@ -1,5 +1,4 @@
 import express from "express";
-import User from "./models/User.js";
 import mongoose from "mongoose";
 import authRoutes from './routes/authRoutes.js';
 import cors from 'cors';
