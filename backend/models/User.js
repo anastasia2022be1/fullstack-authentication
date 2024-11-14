@@ -25,7 +25,13 @@ const userSchema = new mongoose.Schema({
   },
   tokenExpiresAt: {
     type: Date
-  }
+  },
+  posts: [
+    {
+      type: mongoose.ObjectId,
+      ref: "Post"
+    }
+  ]
 })
 
 // Метод toJSON, чтобы исключить пароль из вывода

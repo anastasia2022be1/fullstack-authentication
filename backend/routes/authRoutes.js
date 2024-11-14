@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 import { Resend } from "resend";
+import jwt from "jsonwebtoken"
 import User from '../models/User.js'
 
 const router = express.Router();
@@ -38,19 +39,13 @@ router.post("/register", async (req, res) => {
                 to: emailAddress,
                 subject: 'Willkommen! Bitte E-Mail bestätigen',
                 html: `
-      <div style="font-family: Arial, sans-serif; color: #333;">
-        <h1 style="color: #4CAF50;">Welcome to d01b!</h1>
-        <p>Wir freuen uns, dich in unserem Team zu haben.</p>
-        <p>Bitte bestätige deine Email!</p>
-        <a href="http://localhost:3000/api/verify/${verificationToken}">E-Mail bestätigen<a/>
-        <p>Nächste Schritte:</p>
-        <ol>
-          <li>Explore our features</li>
-          <li>Set up your profile</li>
-          <li>Start using our platform to maximize productivity</li>
-        </ol>
-        <p>Bis bald!</p>
-        <p>Das d01b Team</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f7f7f7;">
+        <h1 style="color: #333; text-align: center;">Welcome to d01b</h1>
+        <p style="color: #666; line-height: 1.6;">We are happy to see u again</p>
+        <div style="text-align: center; margin-top: 30px;">
+          <a href="http://localhost:3000/api/verify/${verificationToken}" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">E-Mail bestätigen</a>
+        </div>
+        <p style="color: #999; font-size: 12px; margin-top: 30px; text-align: center;">Next Step</p>
       </div>
     `
             });
@@ -129,10 +124,10 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ error: 'Invalid login' });
         }
 
-        res.json({
-            status: "success",
-            user: user
-        });
+        const payload = { userId: user._id };
+        const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
+
+        res.json({ user: user, token: token });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
