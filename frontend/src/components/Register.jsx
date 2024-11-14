@@ -24,7 +24,7 @@ export default function Register() {
             }
             setMessage("Bitte checke deine Inbox und bestätige dein E-Mail.");
         })
-        .catch(error => setMessage("Bitte kontrolliere deine Daten"));
+        .catch((error) => setMessage("Bitte kontrolliere deine Daten"));
 
     }
 

@@ -42,7 +42,7 @@ router.post("/register", async (req, res) => {
         <h1 style="color: #4CAF50;">Welcome to d01b!</h1>
         <p>Wir freuen uns, dich in unserem Team zu haben.</p>
         <p>Bitte bestätige deine Email!</p>
-        <a href="http://localhost:3000/verify/${verificationToken}">E-Mail bestätigen<a/>
+        <a href="http://localhost:3000/api/verify/${verificationToken}">E-Mail bestätigen<a/>
         <p>Nächste Schritte:</p>
         <ol>
           <li>Explore our features</li>
@@ -70,12 +70,20 @@ router.post("/register", async (req, res) => {
     }
 })
 
+
 router.get("/verify/:token", async (req, res) => {
     const token = req.params.token;
     try {
         const user = await User.findOne({ verificationToken: token });
 
+
+
         if (user && Date.now() < user.tokenExpiresAt) {
+
+            // Проверка, что пользователь не подтвержден
+            if (user.verified) {
+                return res.status(400).json({ error: "Account is already verified" });
+            }
 
             // Подтверждаем учетную запись
             user.verified = true;
@@ -97,7 +105,6 @@ router.post("/login", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    // console.log(req.body)
 
     if (!email || !password) {
         return res.status(400).json({ error: 'Invalid login' });
@@ -116,7 +123,7 @@ router.post("/login", async (req, res) => {
 
         const passwordCorrect = await bcrypt.compare(password, user.password);
 
-        console.log(passwordCorrect)
+        // console.log(passwordCorrect)
 
         if (!passwordCorrect) {
             return res.status(401).json({ error: 'Invalid login' });

@@ -3,7 +3,6 @@ import { useState } from "react";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
@@ -14,7 +13,8 @@ function Login() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password, rememberMe })
+      body: JSON.stringify({ email: email, password: password })
+    })
         .then((response) => {
           if (response.status === 200) {
             setMessage("Login erfolgreich!");
@@ -29,22 +29,8 @@ function Login() {
         .catch((error) => {
           setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
         })
-    })
-  }
-    //   });
-
-    //   if (response.status === 400 || response.status === 401) {
-    //     setMessage("Bitte kontrolliere deine Daten.");
-    //   } else if (response.status === 403) {
-    //     setMessage("Bitte bestätige deine E-Mail.");
-    //   } else if (response.ok) {
-    //     setMessage("Login erfolgreich!");
-    //   } else {
-    //     setMessage("Anmeldung fehlgeschlagen. Bitte versuche es erneut.");
-    //   }
-    // } catch (error) {
-    //   setMessage("Es gab ein Problem beim Verbinden mit dem Server.");
-    // };
+    }
+  
 
   return (
     <div className="login-container">
@@ -77,15 +63,6 @@ function Login() {
           />
         </div>
 
-         <div className="remember-me">
-          <input
-            type="checkbox"
-            id="rememberMe"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-          />
-          <label htmlFor="rememberMe">Remember me on this device</label>
-        </div>
 
         <button type="submit" className="login-button">
           Anmelden
