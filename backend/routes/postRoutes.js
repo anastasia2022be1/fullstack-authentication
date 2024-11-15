@@ -7,8 +7,8 @@ const router = express.Router();
 // GET /user/posts - Gibt alle Posts des angemeldeten Benutzers zurück
 router.get("/user/posts", authMiddleware, async (req, res) => {
     try {
-        const userId = req.user._id;
-        console.log(userId)
+        const userId = req.user.userId;
+        // console.log("Is here", userId)
         const posts = await Post.find({ authorId: userId });
         res.status(200).json(posts);
     } catch (error) {
@@ -25,7 +25,8 @@ router.post("/user/posts", authMiddleware, async (req, res) => {
     }
 
     try {
-        const userId = req.user._id;
+        const userId = req.user.userId;
+        // console.log(userId);
         const newPost = await Post.create({
             title: title,
             description: description,
