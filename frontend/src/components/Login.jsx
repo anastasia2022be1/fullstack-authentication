@@ -12,7 +12,7 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
-    fetch("http://localhost:3000/api/login", {
+    fetch("https://fullstack-authentication-nca6.onrender.com/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

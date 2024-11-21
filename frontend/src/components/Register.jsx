@@ -8,7 +8,7 @@ export default function Register() {
     function onSubmit(e) {
         e.preventDefault();
 
-        fetch('http://localhost:3000/api/register', {
+        fetch('https://fullstack-authentication-nca6.onrender.com/api/register', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json' 
